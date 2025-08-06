@@ -1,0 +1,22 @@
+{% extends 'dashboard_base.html' %}
+
+{% block content %}
+<h2>Upload an Update</h2>
+
+<<form method="POST">
+    <label for="course_id">Select Course:</label><br>
+    <select name="course_id" required>
+        {% for course in courses %}
+        <option value="{{ course['id'] }}">{{ course['name'] }} ({{ course['code'] }})</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label for="title">Title:</label><br>
+    <input type="text" name="title" placeholder="Title of the update" required><br><br>
+
+    <label for="message">Message:</label><br>
+    <textarea name="message" rows="5" cols="50" placeholder="Write your update here..." required></textarea><br><br>
+
+    <button type="submit">Upload Update</button>
+</form>
+{% endblock %}

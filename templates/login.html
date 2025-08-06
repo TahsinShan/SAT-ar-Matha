@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>University WebApp - Login</title>
+
+  <!-- Bootstrap 5 CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  
+  <!-- Your existing CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="/" class="brand">UniPortal</a>
+      <div class="nav-links" id="navLinks">
+        <a href="/">Home</a>
+        <a href="/login" class="active">Login</a>
+        <a href="/signup">Signup</a>
+      </div>
+      <div class="hamburger" onclick="toggleMenu()">☰</div>
+    </div>
+  </nav>
+
+  <div class="content container mt-5" style="max-width: 400px;">
+    <h2 class="mb-4 text-center">Login</h2>
+    <form method="POST" action="/login">
+      <div class="mb-3">
+        <input
+          type="text"
+          name="phone"
+          class="form-control"
+          placeholder="Phone Number"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <input
+          type="password"
+          name="password"
+          class="form-control"
+          placeholder="Password"
+          required
+        />
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Login</button>
+    </form>
+  </div>
+
+  <script>
+    function toggleMenu() {
+      var links = document.getElementById('navLinks');
+      links.classList.toggle('active');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{% extends 'dashboard_base.html' %}
+
+{% block content %}
+<h2>All Course Updates</h2>
+
+{% for update in updates %}
+<div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 15px;">
+    <strong>{{ update[3] }}</strong> (by {{ update[2] }}) <br>
+    <small><em>{{ update[1] }}</em></small>
+    <p>{{ update[0] }}</p>
+</div>
+{% else %}
+<p>No updates found.</p>
+{% endfor %}
+{% endblock %}

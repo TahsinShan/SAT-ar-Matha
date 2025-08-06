@@ -1,0 +1,24 @@
+{% extends "dashboard_base.html" %}
+{% block content %}
+<div class="container">
+  <h2 class="section-title">Available Courses</h2>
+
+  {% if courses %}
+    <div class="courses-grid">
+      {% for course in courses %}
+        <div class="course-card">
+          <h3>{{ course.code }}</h3>
+          <p>{{ course.name }}</p>
+          {% if course.syllabus_pdf %}
+            <a href="{{ url_for('static', filename='uploads/' ~ course.syllabus_pdf) }}" target="_blank" class="btn btn-secondary">View Syllabus</a>
+          {% else %}
+            <p><em>No syllabus uploaded</em></p>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No courses available at the moment.</p>
+  {% endif %}
+</div>
+{% endblock %}

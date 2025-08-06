@@ -1,0 +1,30 @@
+{% extends 'dashboard_base.html' %}
+
+{% block content %}
+
+<h2>Manage Events</h2>
+<form method="POST" class="manage-events-form">
+    <input type="text" name="title" placeholder="Event Title" required><br>
+    <input type="date" name="event_date" required><br>
+    <textarea name="description" placeholder="Event Description"></textarea><br>
+    <button type="submit">Add Event</button>
+</form>
+
+<hr>
+
+<h3>All Events</h3>
+<ul class="manage-events-list">
+  {% for event in events %}
+    <li>
+      <div class="event-info">
+        <strong>{{ event.title }}</strong>
+        <div class="event-date">{{ event.event_date }}</div>
+        <div class="event-description">{{ event.description }}</div>
+      </div>
+      <form method="POST" action="{{ url_for('delete_event', event_id=event.id) }}">
+        <button type="submit">Delete</button>
+      </form>
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}

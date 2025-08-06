@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>University WebApp - Signup</title>
+
+  <!-- Bootstrap 5 CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  
+  <!-- Your existing CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="/" class="brand">UniPortal</a>
+      <div class="nav-links" id="navLinks">
+        <a href="/">Home</a>
+        <a href="/login">Login</a>
+        <a href="/signup" class="active">Signup</a>
+      </div>
+      <div class="hamburger" onclick="toggleMenu()">☰</div>
+    </div>
+  </nav>
+
+  <div class="content container mt-5" style="max-width: 450px;">
+    <h2 class="mb-4 text-center">Create an Account</h2>
+    <form method="POST" action="/signup">
+      <div class="mb-3">
+        <label for="role" class="form-label">I am a:</label>
+        <select
+          id="role"
+          name="role"
+          class="form-select"
+          required
+          onchange="toggleFields()"
+        >
+          <option value="" selected>Select Role</option>
+          <option value="student">Student</option>
+          <option value="teacher">Teacher</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <input
+          type="text"
+          name="name"
+          class="form-control"
+          placeholder="Full Name"
+          required
+        />
+      </div>
+
+      <div class="mb-3">
+        <input
+          type="text"
+          name="id_num"
+          class="form-control"
+          placeholder="ID Number"
+          required
+        />
+      </div>
+
+      <div id="studentFields" style="display:none;">
+        <div class="mb-3">
+          <input
+            type="text"
+            name="roll"
+            class="form-control"
+            placeholder="Roll Number"
+          />
+        </div>
+        <div class="mb-3">
+          <input
+            type="text"
+            name="reg_no"
+            class="form-control"
+            placeholder="Registration Number"
+          />
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <input
+          type="text"
+          name="phone"
+          class="form-control"
+          placeholder="Phone Number"
+          required
+        />
+      </div>
+
+      <div class="mb-3">
+        <input
+          type="password"
+          name="password"
+          class="form-control"
+          placeholder="Password"
+          required
+        />
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">Signup</button>
+    </form>
+  </div>
+
+  <script>
+    function toggleMenu() {
+      var links = document.getElementById('navLinks');
+      links.classList.toggle('active');
+    }
+
+    function toggleFields() {
+      var role = document.getElementById('role').value;
+      var studentFields = document.getElementById('studentFields');
+      if (role === "student") {
+        studentFields.style.display = 'block';
+      } else {
+        studentFields.style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>

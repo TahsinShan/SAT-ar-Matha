@@ -1,0 +1,6 @@
+{% extends "dashboard_base.html" %}
+{% block content %}
+<h2>Welcome, {{ user.name }} (Student)</h2>
+<p>Check your class routine, courses and test reports here.</p>
+<a href="{{ url_for('enroll_courses') }}" class="btn btn-primary">Enroll in Courses</a>
+{% endblock %}

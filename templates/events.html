@@ -1,0 +1,14 @@
+{% extends 'dashboard_base.html' %}
+
+{% block content %}
+
+<h2>Upcoming Events</h2>
+<ul class="events-list">
+    {% for event in events %}
+        <li class="event-item">
+            <strong>{{ event.title }}</strong> - {{ event.event_date }}<br>
+            {{ event.description }}
+        </li>
+</ul>
+{% endfor %}
+{% endblock %}
