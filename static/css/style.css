@@ -1,4 +1,4 @@
-/* General Reset and Fonts */
+/* ===== General Reset and Fonts ===== */
 body {
   font-family: 'Poppins', sans-serif;
   margin: 0;
@@ -17,12 +17,11 @@ body {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
-/* NEW: nav-container to align content horizontally */
 .nav-container {
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
-  justify-content: space-between;  /* logo left, nav right */
+  justify-content: space-between;
   align-items: center;
   width: 100%;
 }
@@ -62,31 +61,7 @@ body {
   color: white;
 }
 
-@media (max-width: 768px) {
-  .nav-links {
-    display: none;
-    position: absolute;
-    top: 56px;
-    right: 24px;
-    flex-direction: column;
-    background-color: #1e90ff;
-    border-radius: 8px;
-    width: 140px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-  }
-  .nav-links.active {
-    display: flex;
-  }
-  .nav-links a {
-    padding: 12px;
-    border-bottom: 1px solid #ffffff50;
-  }
-  .hamburger {
-    display: block;
-  }
-}
-
-/* ===== Hero Content on Home Page ===== */
+/* ===== Hero Content ===== */
 .hero-content {
   max-width: 700px;
   margin: 80px auto 120px auto;
@@ -107,7 +82,6 @@ body {
   line-height: 1.5;
 }
 
-/* Primary button */
 .btn-primary {
   background-color: #1e90ff;
   border: none;
@@ -130,19 +104,25 @@ body {
 .dashboard-body {
   display: flex;
   min-height: 100vh;
+  flex-direction: row;
 }
 
+/* ===== Sidebar ===== */
 .sidebar {
   width: 220px;
   background-color: #1e90ff;
   color: white;
   padding: 30px 20px;
   position: fixed;
+  top: 0;
+  left: 0;
   height: 100vh;
   box-shadow: 2px 0 12px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   gap: 18px;
+  transition: transform 0.3s ease;
+  z-index: 1500;
 }
 
 .sidebar h3 {
@@ -166,42 +146,109 @@ body {
   background-color: #1565c0;
 }
 
-.main-content {
-   margin-left: 200px; /* instead of margin-left */
-  padding: 30px 30px 30px 240px; /* adjust all paddings */
-  background-color: #fff;
-  flex-grow: 1;
-  box-shadow: inset 0 0 20px #eee;
-  border-radius: 12px 0 0 12px;
-  min-height: 100vh;
-  box-sizing: border-box;
+/* ===== Sidebar Backdrop ===== */
+.sidebar-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  visibility: hidden;
+  z-index: 1400;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.sidebar-backdrop.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ===== Sidebar Toggle Button ===== */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 16px;
+  left: 400px;
+  z-index: 2001;
+  font-size: 28px;
+  background-color: #1e90ff;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Show the toggle button only on mobile */
+@media (max-width: 768px) {
+  .sidebar-toggle {
+    display: block;
+  }
+
+  .main-content {
+    margin-left: 0; /* Let content fill full width when sidebar is hidden */
+  }
+
+  .dashboard-body {
+    flex-direction: column;
+  }
 }
 
 
+/* ===== Dashboard Wrapper ===== */
+.dashboard-wrapper {
+  display: flex;
+  width: 100%;
+}
 
+/* ===== Responsive Sidebar Drawer (Mobile Fix) ===== */
 @media (max-width: 768px) {
   .sidebar {
-    width: 60px;
-    padding: 20px 10px;
+    transform: translateX(-100%);
   }
-  .sidebar h3 {
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .dashboard-body {
+    flex-direction: column;
+  }
+
+  .sidebar-toggle {
+    display: block;
+  }
+
+  .nav-links {
     display: none;
+    position: absolute;
+    top: 56px;
+    right: 24px;
+    flex-direction: column;
+    background-color: #1e90ff;
+    border-radius: 8px;
+    width: 140px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   }
-  .sidebar a {
-    font-size: 0;
-    padding: 10px 0;
-    text-align: center;
-    margin-bottom: 10px;
+
+  .nav-links.active {
+    display: flex;
   }
-  .main-content {
-    margin-left: 60px;
-    padding: 20px;
+
+  .nav-links a {
+    padding: 12px;
+    border-bottom: 1px solid #ffffff50;
+  }
+
+  .hamburger {
+    display: block;
   }
 }
 
-
-
-
+/* ===== Utility Styles ===== */
 .container {
   padding: 20px;
 }
@@ -217,7 +264,7 @@ body {
   padding: 20px;
   border-radius: 10px;
   margin-bottom: 30px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .card h3 {
@@ -255,6 +302,7 @@ input[type="file"] {
   font-weight: 600;
 }
 
+/* ===== Tables ===== */
 .styled-table {
   width: 100%;
   border-collapse: collapse;
@@ -272,9 +320,7 @@ input[type="file"] {
   font-weight: 600;
 }
 
-
-
-
+/* ===== Courses ===== */
 .courses-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -286,19 +332,18 @@ input[type="file"] {
   background: white;
   border-radius: 10px;
   padding: 20px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   transition: box-shadow 0.3s ease;
 }
 
 .course-card:hover {
-  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .course-card h3 {
-  margin: 0 0 12px 0;
+  margin-bottom: 12px;
   color: #1e90ff;
   font-weight: 700;
 }
@@ -327,11 +372,7 @@ input[type="file"] {
   background-color: #5a6268;
 }
 
-
-
-
-
-
+/* ===== Enrollment ===== */
 .enroll-card {
   display: flex;
   align-items: center;
@@ -339,13 +380,13 @@ input[type="file"] {
   padding: 12px 16px;
   border-radius: 8px;
   margin-bottom: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: box-shadow 0.3s ease;
 }
 
 .enroll-card:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .enroll-card input[type="checkbox"] {
@@ -355,9 +396,7 @@ input[type="file"] {
   cursor: pointer;
 }
 
-
-
-/* EVENTS LIST */
+/* ===== Events ===== */
 .events-list {
   list-style: none;
   padding: 0;
@@ -371,12 +410,12 @@ input[type="file"] {
   background: #fff;
   padding: 20px 24px;
   border-radius: 12px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease;
 }
 
 .event-item:hover {
-  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
 }
 
 .event-item strong {
@@ -399,12 +438,12 @@ input[type="file"] {
   line-height: 1.4;
 }
 
-/* MANAGE EVENTS FORM */
+/* ===== Manage Events Form ===== */
 .manage-events-form {
   background: #fff;
   padding: 25px 30px;
   border-radius: 12px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   max-width: 600px;
   margin-bottom: 40px;
 }
@@ -423,8 +462,7 @@ input[type="file"] {
   transition: border-color 0.3s ease;
 }
 
-.manage-events-form input[type="text"]:focus,
-.manage-events-form input[type="date"]:focus,
+.manage-events-form input:focus,
 .manage-events-form textarea:focus {
   border-color: #1e90ff;
   outline: none;
@@ -446,7 +484,7 @@ input[type="file"] {
   background-color: #1565c0;
 }
 
-/* MANAGE EVENTS LIST */
+/* ===== Manage Events List ===== */
 .manage-events-list {
   max-width: 800px;
 }
@@ -456,7 +494,7 @@ input[type="file"] {
   padding: 18px 24px;
   border-radius: 12px;
   margin-bottom: 16px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -506,3 +544,24 @@ input[type="file"] {
 .manage-events-list button:hover {
   background-color: #c0392b;
 }
+
+/* ===== Main Content ===== */
+.main-content {
+  margin-left: 260px;
+  padding: 30px;
+  background-color: #fff;
+  flex-grow: 1;
+  min-height: 100vh;
+  box-sizing: border-box;
+  margin-top: 20px;
+  transition: margin-left 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+  }
+}
+
+
+

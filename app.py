@@ -220,33 +220,37 @@ def upload_update():
 @login_required
 def updates():
     conn = get_db_connection()
+    c = conn.cursor()
+
     role = session.get('role')
     user_id = session.get('user_id')
 
     if role == 'student':
-        # Get updates only for enrolled courses
-        updates = conn.execute('''
-            SELECT updates.message, updates.created_at, users.name, courses.name
+        # Only show updates from courses the student is enrolled in
+        c.execute('''
+            SELECT updates.id, updates.message, updates.created_at, updates.teacher_id,
+                   users.name, updates.title
             FROM updates
             JOIN users ON updates.teacher_id = users.id
-            JOIN courses ON updates.course_id = courses.id
-            WHERE updates.course_id IN (
-                SELECT course_id FROM enrollments WHERE student_id = ?
-            )
+            JOIN enrollments ON enrollments.course_id = updates.course_id
+            WHERE enrollments.student_id = ?
             ORDER BY updates.created_at DESC
-        ''', (user_id,)).fetchall()
+        ''', (user_id,))
     else:
-        # For teacher/admin, show all updates
-        updates = conn.execute('''
-            SELECT updates.message, updates.created_at, users.name, courses.name
+        # Admin or teacher can see all updates
+        c.execute('''
+            SELECT updates.id, updates.message, updates.created_at, updates.teacher_id,
+                   users.name, updates.title
             FROM updates
             JOIN users ON updates.teacher_id = users.id
-            JOIN courses ON updates.course_id = courses.id
             ORDER BY updates.created_at DESC
-        ''').fetchall()
+        ''')
 
+    updates = c.fetchall()
     conn.close()
+
     return render_template('updates.html', updates=updates)
+
 
 
 @app.route('/manage-events', methods=['GET', 'POST'])
@@ -316,6 +320,34 @@ def manage_users():
     conn.close()
     
     return render_template('manage_users.html', users=users)
+
+
+
+
+@app.route('/delete-update/<int:update_id>', methods=['POST'])
+@login_required
+def delete_update(update_id):
+    conn = get_db_connection()
+    update = conn.execute('SELECT * FROM updates WHERE id = ?', (update_id,)).fetchone()
+
+    if not update:
+        conn.close()
+        return "Update not found", 404
+
+    user_id = session.get('user_id')
+    role = session.get('role')
+
+    # Only allow if admin or owner
+    if role == 'admin' or (role == 'teacher' and update['teacher_id'] == user_id):
+        conn.execute('DELETE FROM updates WHERE id = ?', (update_id,))
+        conn.commit()
+        conn.close()
+        return redirect(url_for('updates'))
+    else:
+        conn.close()
+        return "Unauthorized", 403
+
+
 
 
 

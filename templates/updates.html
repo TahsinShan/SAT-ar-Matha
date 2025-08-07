@@ -4,12 +4,18 @@
 <h2>All Course Updates</h2>
 
 {% for update in updates %}
-<div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 15px;">
-    <strong>{{ update[3] }}</strong> (by {{ update[2] }}) <br>
-    <small><em>{{ update[1] }}</em></small>
-    <p>{{ update[0] }}</p>
-</div>
+  <div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 15px;">
+    <strong>{{ update[5] }}</strong> <span style="color: #777;">(by {{ update[4] }})</span><br>
+    <small><em>{{ update[2] }}</em></small>
+    <p>{{ update[1] }}</p>
+
+    {% if role == 'admin' or (role == 'teacher' and update[3] == session['user_id']) %}
+    <form method="POST" action="{{ url_for('delete_update', update_id=update[0]) }}" onsubmit="return confirm('Are you sure you want to delete this update?');">
+      <button type="submit">Delete</button>
+    </form>
+    {% endif %}
+  </div>
 {% else %}
-<p>No updates found.</p>
+  <p>No updates found.</p>
 {% endfor %}
 {% endblock %}

@@ -8,28 +8,53 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
 </head>
 <body class="dashboard-body">
-  <aside class="sidebar">
-    <a href="/dashboard" class="logo"><h3>UniPortal</h3></a>
-    <a href="/dashboard" class="{% if request.path == '/dashboard' %}active{% endif %}">Dashboard</a>
-    <a href="/courses" class="{% if request.path.startswith('/courses') %}active{% endif %}">Courses</a>
-    <a href="/updates" class="{% if request.path.startswith('/updates') %}active{% endif %}">Updates</a>
-    <a href="/events" class="{% if request.path.startswith('/events') %}active{% endif %}">Events</a>
-    
-    {% if role == 'teacher' %}
-      <a href="/upload_update" class="{% if request.path.startswith('/upload_update') %}active{% endif %}">Upload Updates</a>
-    {% endif %}
+  <div class="dashboard-topbar">
+  <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+</div>
 
-    {% if role == 'admin' %}
-      <a href="/manage-users" class="{% if request.path.startswith('/manage-users') %}active{% endif %}">Manage Users</a>
-      <a href="/manage-events" class="{% if request.path.startswith('/manage-events') %}active{% endif %}">Manage Events</a>
-      <a href="/admin/manage_course" class="{% if request.path.startswith('/admin/manage_course') %}active{% endif %}">Manage Courses</a>
-    {% endif %}
+  <div class="dashboard-wrapper">
+    <aside class="sidebar" id="sidebar">
+      <a href="/dashboard" class="logo"><h3>UniPortal</h3></a>
+      <a href="/dashboard" class="{% if request.path == '/dashboard' %}active{% endif %}">Dashboard</a>
+      <a href="/courses" class="{% if request.path.startswith('/courses') %}active{% endif %}">Courses</a>
+      <a href="/updates" class="{% if request.path.startswith('/updates') %}active{% endif %}">Updates</a>
+      <a href="/events" class="{% if request.path.startswith('/events') %}active{% endif %}">Events</a>
 
-    <a href="/logout">Logout</a>
-  </aside>
+      {% if role == 'teacher' %}
+        <a href="/upload_update" class="{% if request.path.startswith('/upload_update') %}active{% endif %}">Upload Updates</a>
+      {% endif %}
 
-  <main class="main-content">
-    {% block content %}{% endblock %}
-  </main>
+      {% if role == 'admin' %}
+        <a href="/manage-users" class="{% if request.path.startswith('/manage-users') %}active{% endif %}">Manage Users</a>
+        <a href="/manage-events" class="{% if request.path.startswith('/manage-events') %}active{% endif %}">Manage Events</a>
+        <a href="/admin/manage_course" class="{% if request.path.startswith('/admin/manage_course') %}active{% endif %}">Manage Courses</a>
+      {% endif %}
+
+      <a href="/logout">Logout</a>
+    </aside>
+
+    <main class="main-content">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+
+  <script>
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('open');
+
+    // Optional: Close sidebar when a link is clicked
+    const links = sidebar.querySelectorAll('a');
+    links.forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+          sidebar.classList.remove('open');
+        }
+      });
+    });
+  }
+</script>
+
 </body>
+
 </html>

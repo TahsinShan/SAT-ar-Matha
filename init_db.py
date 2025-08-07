@@ -5,6 +5,9 @@ from werkzeug.security import generate_password_hash
 conn = sqlite3.connect('database.db')
 c = conn.cursor()
 
+# Enable Foreign Key Support
+c.execute('PRAGMA foreign_keys = ON')
+
 # Users Table
 c.execute('''
     CREATE TABLE IF NOT EXISTS users (
@@ -37,8 +40,8 @@ c.execute('''
         student_id INTEGER NOT NULL,
         course_id INTEGER NOT NULL,
         UNIQUE(student_id, course_id),
-        FOREIGN KEY(student_id) REFERENCES users(id),
-        FOREIGN KEY(course_id) REFERENCES courses(id)
+        FOREIGN KEY(student_id) REFERENCES users(id) ON DELETE CASCADE,
+        FOREIGN KEY(course_id) REFERENCES courses(id) ON DELETE CASCADE
     )
 ''')
 
@@ -52,8 +55,8 @@ c.execute('''
         new_time TEXT NOT NULL,
         message TEXT,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY(course_id) REFERENCES courses(id),
-        FOREIGN KEY(teacher_id) REFERENCES users(id)
+        FOREIGN KEY(course_id) REFERENCES courses(id) ON DELETE CASCADE,
+        FOREIGN KEY(teacher_id) REFERENCES users(id) ON DELETE CASCADE
     )
 ''')
 
@@ -66,8 +69,8 @@ c.execute('''
         title TEXT NOT NULL,
         message TEXT,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY(course_id) REFERENCES courses(id),
-        FOREIGN KEY(teacher_id) REFERENCES users(id)
+        FOREIGN KEY(course_id) REFERENCES courses(id) ON DELETE CASCADE,
+        FOREIGN KEY(teacher_id) REFERENCES users(id) ON DELETE CASCADE
     )
 ''')
 
@@ -79,12 +82,12 @@ c.execute('''
         student_id INTEGER,
         marks INTEGER,
         report_pdf TEXT,
-        FOREIGN KEY(course_id) REFERENCES courses(id),
-        FOREIGN KEY(student_id) REFERENCES users(id)
+        FOREIGN KEY(course_id) REFERENCES courses(id) ON DELETE CASCADE,
+        FOREIGN KEY(student_id) REFERENCES users(id) ON DELETE CASCADE
     )
 ''')
 
-# Events Table (updated column name to event_date)
+# Events Table
 c.execute('''
     CREATE TABLE IF NOT EXISTS events (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -92,7 +95,7 @@ c.execute('''
         description TEXT,
         created_by INTEGER,
         event_date TEXT,
-        FOREIGN KEY(created_by) REFERENCES users(id)
+        FOREIGN KEY(created_by) REFERENCES users(id) ON DELETE CASCADE
     )
 ''')
 
