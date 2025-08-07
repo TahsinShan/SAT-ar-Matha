@@ -8,7 +8,7 @@
 
 Uniportal is your personal DIY university system. Think of it as your escape route from boring institutional websites. It’s designed to help students keep up with rescheduled lectures, view course info and test reports, and let teachers/admins manage it all through a clean web interface.
 
-It’s not trying to be fancy. It’s trying to be useful. And a little fun.
+It’s not trying to be fancy. It’s trying to be useful. and a little fun.
 
 ---
 
@@ -112,3 +112,4 @@ This project doesn’t currently include a license. Add one if you plan to share
 ## Maintainer
 
 Built by [TahsinShan](https://github.com/TahsinShan)
+
