@@ -361,5 +361,8 @@ def logout():
     session.clear()
     return redirect(url_for('login'))
 
+import os
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    if os.environ.get('FLASK_ENV') != 'production':
+        app.run(debug=True)
