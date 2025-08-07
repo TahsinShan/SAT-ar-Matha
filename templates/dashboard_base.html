@@ -20,7 +20,7 @@
       <a href="/updates" class="{% if request.path.startswith('/updates') %}active{% endif %}">Updates</a>
       <a href="/events" class="{% if request.path.startswith('/events') %}active{% endif %}">Events</a>
 
-      {% if role == 'teacher' %}
+      {% if role == 'teacher' or role == 'admin' %}
         <a href="/upload_update" class="{% if request.path.startswith('/upload_update') %}active{% endif %}">Upload Updates</a>
       {% endif %}
 
