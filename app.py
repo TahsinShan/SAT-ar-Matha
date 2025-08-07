@@ -194,19 +194,30 @@ def enroll_courses():
 @app.route('/upload_update', methods=['GET', 'POST'])
 @login_required
 def upload_update():
-    if session.get('role') != 'teacher':
+    if session.get('role') not in ['teacher', 'admin']:
         return "Unauthorized", 403
 
     conn = get_db_connection()
-    teacher_id = session['user_id']
+    user_id = session['user_id']
+    role = session.get('role')
+
     courses = conn.execute("SELECT * FROM courses").fetchall()
 
     if request.method == 'POST':
         course_id = request.form['course_id']
         title = request.form['title']
         message = request.form['message']
-        conn.execute("INSERT INTO updates (course_id, teacher_id, title, message) VALUES (?, ?, ?, ?)",
-                    (course_id, teacher_id, title, message))
+
+        # Use teacher_id or admin_id based on role
+        if role == 'teacher':
+            teacher_id = user_id
+        else:
+            teacher_id = None  # If you want to store admin updates differently
+
+        conn.execute(
+            "INSERT INTO updates (course_id, teacher_id, title, message) VALUES (?, ?, ?, ?)",
+            (course_id, teacher_id, title, message)
+        )
 
         conn.commit()
         conn.close()
