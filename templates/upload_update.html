@@ -1,22 +1,120 @@
 {% extends 'dashboard_base.html' %}
 
 {% block content %}
-<h2>Upload an Update</h2>
+<style>
+  .update-form-container {
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 2rem 2.5rem;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
 
-<<form method="POST">
-    <label for="course_id">Select Course:</label><br>
+  h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+  }
+
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    color: #34495e;
+  }
+
+  select,
+  input[type="text"],
+  textarea {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    margin-bottom: 1.2rem;
+    border: 1.8px solid #bdc3c7;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+
+  select:focus,
+  input[type="text"]:focus,
+  textarea:focus {
+    border-color: #3498db;
+    outline: none;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  button[type="submit"] {
+    width: 100%;
+    padding: 0.7rem;
+    background-color: #3498db;
+    color: white;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.05rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  button[type="submit"]:hover {
+    background-color: #2980b9;
+  }
+
+  .flashes {
+    max-width: 500px;
+    margin: 1rem auto;
+    padding: 1rem 1.2rem;
+    list-style-type: none;
+    background-color: #d4edda;
+    color: #155724;
+    border: 1.5px solid #c3e6cb;
+    border-radius: 5px;
+    font-weight: 600;
+    text-align: center;
+    box-shadow: 0 3px 8px rgba(46, 204, 113, 0.3);
+  }
+
+  @media (max-width: 500px) {
+    .update-form-container {
+      margin: 1rem;
+      padding: 1.5rem;
+    }
+  }
+</style>
+
+<div class="update-form-container">
+  <h2>Upload an Update</h2>
+
+  <form method="POST">
+    <label for="course_id">Select Course:</label>
     <select name="course_id" required>
-        {% for course in courses %}
-        <option value="{{ course['id'] }}">{{ course['name'] }} ({{ course['code'] }})</option>
-        {% endfor %}
-    </select><br><br>
+      {% for course in courses %}
+      <option value="{{ course['id'] }}">{{ course['name'] }} ({{ course['code'] }})</option>
+      {% endfor %}
+    </select>
 
-    <label for="title">Title:</label><br>
-    <input type="text" name="title" placeholder="Title of the update" required><br><br>
+    <label for="title">Title:</label>
+    <input type="text" name="title" placeholder="Title of the update" required>
 
-    <label for="message">Message:</label><br>
-    <textarea name="message" rows="5" cols="50" placeholder="Write your update here..." required></textarea><br><br>
+    <label for="message">Message:</label>
+    <textarea name="message" rows="5" placeholder="Write your update here..." required></textarea>
 
     <button type="submit">Upload Update</button>
-</form>
+  </form>
+</div>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class="flashes">
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
 {% endblock %}

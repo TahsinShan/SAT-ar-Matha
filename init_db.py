@@ -33,6 +33,18 @@ c.execute('''
     )
 ''')
 
+# Resources Table (NEW)
+c.execute('''
+    CREATE TABLE IF NOT EXISTS resources (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        course_id INTEGER NOT NULL,
+        filename TEXT NOT NULL,
+        title TEXT,
+        uploaded_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY(course_id) REFERENCES courses(id) ON DELETE CASCADE
+    )
+''')
+
 # Enrollments Table
 c.execute('''
     CREATE TABLE IF NOT EXISTS enrollments (

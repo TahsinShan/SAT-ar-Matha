@@ -1,0 +1,27 @@
+{% extends "dashboard_base.html" %}
+{% block content %}
+<div class="container">
+  <h2>Edit Course</h2>
+
+  <form method="POST" enctype="multipart/form-data">
+    <label for="code">Course Code</label>
+    <input type="text" name="code" id="code" value="{{ course.code }}" required />
+
+    <label for="name">Course Title</label>
+    <input type="text" name="name" id="name" value="{{ course.name }}" required />
+
+    <label>Current PDF:</label><br>
+    {% if course.syllabus_pdf %}
+      <a href="{{ url_for('static', filename='uploads/' ~ course.syllabus_pdf) }}" target="_blank">View current syllabus</a><br><br>
+    {% else %}
+      No PDF uploaded yet.<br><br>
+    {% endif %}
+
+    <label for="syllabus_pdf">Replace PDF (optional)</label>
+    <input type="file" name="syllabus_pdf" id="syllabus_pdf" accept="application/pdf" />
+
+    <button type="submit" class="btn">Save Changes</button>
+    <a href="{{ url_for('manage_course') }}" class="btn-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock %}

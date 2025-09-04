@@ -1,21 +1,95 @@
 {% extends 'dashboard_base.html' %}
 
 {% block content %}
+
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #ffffff;
+    color: #000000;
+  }
+
+  h2 {
+    color: #0a1f44; /* Dark Blue */
+    border-bottom: 2px solid #0a1f44;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+
+  .update-container {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-left: 5px solid #0a1f44; /* Accent stripe */
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(10, 31, 68, 0.1);
+  }
+
+  .update-title {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #0a1f44;
+  }
+
+  .update-author {
+    color: #555;
+    font-size: 0.9em;
+  }
+
+  .update-timestamp {
+    font-style: italic;
+    color: #888;
+    font-size: 0.85em;
+  }
+
+  .update-content {
+    margin-top: 10px;
+    font-size: 1em;
+  }
+
+  .update-form {
+    margin-top: 10px;
+  }
+
+  .update-form button {
+    background-color: #0a1f44;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s;
+  }
+
+  .update-form button:hover {
+    background-color: #06142b;
+  }
+
+  .no-updates {
+    color: #777;
+    font-style: italic;
+  }
+</style>
+
 <h2>All Course Updates</h2>
 
 {% for update in updates %}
-  <div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 15px;">
-    <strong>{{ update[5] }}</strong> <span style="color: #777;">(by {{ update[4] }})</span><br>
-    <small><em>{{ update[2] }}</em></small>
-    <p>{{ update[1] }}</p>
+  <div class="update-container">
+    <div class="update-title">{{ update[5] }}</div>
+    <div class="update-author">by {{ update[4] }}</div>
+    <div class="update-timestamp">{{ update[2] }}</div>
+    <div class="update-content">{{ update[1] }}</div>
 
     {% if role == 'admin' or (role == 'teacher' and update[3] == session['user_id']) %}
-    <form method="POST" action="{{ url_for('delete_update', update_id=update[0]) }}" onsubmit="return confirm('Are you sure you want to delete this update?');">
+    <form method="POST" action="{{ url_for('delete_update', update_id=update[0]) }}" class="update-form" onsubmit="return confirm('Are you sure you want to delete this update?');">
       <button type="submit">Delete</button>
     </form>
     {% endif %}
   </div>
 {% else %}
-  <p>No updates found.</p>
+  <p class="no-updates">No updates found.</p>
 {% endfor %}
+
 {% endblock %}
