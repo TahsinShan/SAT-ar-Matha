@@ -33,18 +33,6 @@ c.execute('''
     )
 ''')
 
-# Resources Table (NEW)
-c.execute('''
-    CREATE TABLE IF NOT EXISTS resources (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        course_id INTEGER NOT NULL,
-        filename TEXT NOT NULL,
-        title TEXT,
-        uploaded_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY(course_id) REFERENCES courses(id) ON DELETE CASCADE
-    )
-''')
-
 # Enrollments Table
 c.execute('''
     CREATE TABLE IF NOT EXISTS enrollments (
@@ -120,6 +108,35 @@ c.execute('''
         for_role TEXT
     )
 ''')
+
+
+# Resources Table (NEW)
+c.execute('''
+    CREATE TABLE IF NOT EXISTS resources (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        course_id INTEGER NOT NULL,
+        filename TEXT NOT NULL,
+        title TEXT,
+        uploaded_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY(course_id) REFERENCES courses(id) ON DELETE CASCADE
+    )
+''')
+
+
+
+# Videos Table (new for YouTube video links)
+c.execute('''
+    CREATE TABLE IF NOT EXISTS videos (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        course_id INTEGER NOT NULL,
+        title TEXT NOT NULL,
+        embed_code TEXT NOT NULL,
+        FOREIGN KEY(course_id) REFERENCES courses(id) ON DELETE CASCADE
+    )
+''')
+
+
+
 
 # Insert Default Admins if not exists
 admin_users = [

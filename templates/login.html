@@ -14,15 +14,21 @@
 </head>
 <body>
   <nav class="navbar">
-    <div class="nav-container">
-      <a href="/" class="brand">UniPortal</a>
-      <div class="nav-links" id="navLinks">
-        <a href="/">Home</a>
-        <a href="/login" class="active">Login</a>
-      </div>
-      <div class="hamburger" onclick="toggleMenu()">☰</div>
+  <div class="nav-container">
+    <a href="/" class="brand">
+  <div class="brand-logo-text">
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+    <span class="brand-text">SAT ar Matha!</span>
+  </div>
+</a>
+
+    <div class="nav-links" id="navLinks">
+      <a href="/" >Home</a>
+      <a href="/login" class="active">Login</a>
     </div>
-  </nav>
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
+  </div>
+</nav>
 
   <div class="content container mt-5" style="max-width: 400px;">
     <h2 class="mb-4 text-center">Login</h2>

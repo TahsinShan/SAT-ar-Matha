@@ -1,0 +1,178 @@
+{% extends "dashboard_base.html" %}
+{% block content %}
+<style>
+  h2 {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 2rem;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  h3 {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #34495e;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 5px;
+  }
+
+  form {
+    background: #f9f9f9;
+    padding: 25px 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.07);
+    max-width: 500px;
+    margin: 0 auto 50px auto;
+    font-family: 'Open Sans', sans-serif;
+  }
+
+  form label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #2c3e50;
+  }
+
+  form input[type="text"] {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 20px;
+    border: 1.8px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+
+  form input[type="text"]:focus {
+    border-color: #3498db;
+    outline: none;
+  }
+
+  form button[type="submit"] {
+    background-color: #2980b9;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  form button[type="submit"]:hover {
+    background-color: #1c5980;
+  }
+
+  table {
+    width: 90%;
+    margin: 0 auto 60px auto;
+    border-collapse: collapse;
+    font-family: 'Open Sans', sans-serif;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  thead {
+    background-color: #3498db;
+    color: white;
+    font-weight: 700;
+  }
+
+  thead th {
+    padding: 15px 20px;
+    text-align: left;
+  }
+
+  tbody tr {
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+    transition: background-color 0.3s ease;
+  }
+
+  tbody tr:hover {
+    background-color: #f0f8ff;
+  }
+
+  tbody td {
+    padding: 15px 20px;
+    vertical-align: middle;
+    color: #34495e;
+  }
+
+  tbody a {
+    color: #2980b9;
+    font-weight: 600;
+    text-decoration: none;
+    margin-right: 15px;
+    transition: color 0.3s ease;
+  }
+
+  tbody a:hover {
+    color: #1c5980;
+  }
+
+  tbody form button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+  }
+
+  tbody form button:hover {
+    background-color: #b92b21;
+  }
+
+  p {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.2rem;
+    color: #7f8c8d;
+    text-align: center;
+    margin-top: 50px;
+  }
+</style>
+
+<h2>Manage Videos for {{ course.name }} ({{ course.code }})</h2>
+
+<h3>Add New Video</h3>
+<form method="POST">
+  <label for="title">Video Title</label>
+  <input type="text" name="title" id="title" required>
+  <label for="embed_code">YouTube Embed Code (iframe)</label>
+<textarea id="embed_code" name="embed_code" rows="4" required></textarea>
+
+  <button type="submit">Add Video</button>
+</form>
+
+<h3>Existing Videos</h3>
+{% if videos %}
+<table>
+  <thead>
+    <tr><th>Title</th><th>Actions</th></tr>
+  </thead>
+  <tbody>
+    {% for v in videos %}
+      <tr>
+        <td>{{ v.title }}</td>
+        <td>
+          <a href="{{ url_for('edit_video', video_id=v.id) }}">Edit</a>
+          <form method="POST" action="{{ url_for('delete_video', video_id=v.id) }}" style="display:inline;" onsubmit="return confirm('Delete this video?');">
+            <button type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No videos added yet.</p>
+{% endif %}
+{% endblock %}

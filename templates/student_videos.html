@@ -1,0 +1,30 @@
+{% extends "dashboard_base.html" %}
+
+{% block content %}
+<h2>Your Course Videos</h2>
+
+{% if courses %}
+  {% for course in courses %}
+    <div class="course-section">
+      <h3>{{ course.name }} ({{ course.code }})</h3>
+      {% set videos = course_videos[course.id] %}
+      
+      {% if videos %}
+        <ul>
+          {% for v in videos %}
+            <li>
+              <strong>{{ v.title }}</strong>
+              &nbsp;|&nbsp;
+              <a href="{{ url_for('watch_video', video_id=v.id) }}">Watch</a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No videos available for this course.</p>
+      {% endif %}
+    </div>
+  {% endfor %}
+{% else %}
+  <p>You are not enrolled in any courses.</p>
+{% endif %}
+{% endblock %}

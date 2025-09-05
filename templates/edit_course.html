@@ -12,7 +12,7 @@
 
     <label>Current PDF:</label><br>
     {% if course.syllabus_pdf %}
-      <a href="{{ url_for('static', filename='uploads/' ~ course.syllabus_pdf) }}" target="_blank">View current syllabus</a><br><br>
+      <a href="{{ url_for('static', filename='uploads/' ~ course.syllabus_pdf) }}" target="_blank">View current Routine</a><br><br>
     {% else %}
       No PDF uploaded yet.<br><br>
     {% endif %}

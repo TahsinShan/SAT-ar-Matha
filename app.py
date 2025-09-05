@@ -4,6 +4,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 import os
 from werkzeug.utils import secure_filename
+from flask import request, redirect, url_for, flash
+import re
 
 app = Flask(__name__)
 
@@ -359,31 +361,86 @@ def events():
     return render_template('events.html', events=events)
 
 
-@app.route('/manage-users', methods=['GET', 'POST'])
-@login_required
+# ---------- Manage Users ----------
+@app.route('/manage-users', methods=['GET'])
 def manage_users():
-    if session.get('role') != 'admin':
-        return redirect(url_for('dashboard'))
-    
-    conn = get_db_connection()
-    
-    if request.method == 'POST':
-        # Delete user
-        user_id = request.form.get('user_id')
-        if user_id:
-            # Prevent deleting admin users if you want (optional)
-            user = conn.execute('SELECT role FROM users WHERE id = ?', (user_id,)).fetchone()
-            if user and user['role'] != 'admin':
-                conn.execute('DELETE FROM users WHERE id = ?', (user_id,))
-                conn.commit()
-        conn.close()
-        return redirect(url_for('manage_users'))
-    
-    users = conn.execute('SELECT id, name, role, phone FROM users ORDER BY role, name').fetchall()
-    conn.close()
-    
-    return render_template('manage_users.html', users=users)
+    conn = sqlite3.connect('database.db')
+    conn.row_factory = sqlite3.Row
+    c = conn.cursor()
 
+    # Fetch all users
+    c.execute("SELECT * FROM users")
+    users = c.fetchall()
+
+    # Fetch courses for each student
+    user_courses = {}
+    for user in users:
+        if user['role'] == 'student':
+            c.execute('''
+                SELECT courses.name FROM courses
+                JOIN enrollments ON enrollments.course_id = courses.id
+                WHERE enrollments.student_id = ?
+            ''', (user['id'],))
+            courses = [row['name'] for row in c.fetchall()]
+            user_courses[user['id']] = courses
+        else:
+            user_courses[user['id']] = []
+
+    conn.close()
+    return render_template('manage_users.html', users=users, user_courses=user_courses)
+
+# ---------- Edit User ----------
+@app.route('/edit-user/<int:user_id>', methods=['GET', 'POST'])
+def edit_user(user_id):
+    conn = sqlite3.connect('database.db')
+    conn.row_factory = sqlite3.Row
+    c = conn.cursor()
+
+    if request.method == 'POST':
+        # Process form submission
+        name = request.form['name']
+        phone = request.form['phone']
+        id_num = request.form.get('id_num')
+        roll = request.form.get('roll')
+        reg_no = request.form.get('reg_no')
+
+        c.execute('''
+            UPDATE users
+            SET name = ?, phone = ?, id_num = ?, roll = ?, reg_no = ?
+            WHERE id = ?
+        ''', (name, phone, id_num, roll, reg_no, user_id))
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for('manage_users'))
+
+    # GET request - load the form
+    c.execute("SELECT * FROM users WHERE id = ?", (user_id,))
+    user = c.fetchone()
+    conn.close()
+
+    if not user:
+        return "User not found", 404
+
+    return render_template('edit_user.html', user=user)
+
+# ---------- Delete User ----------
+@app.route('/delete-user', methods=['POST'])
+def delete_user():
+    user_id = request.form['user_id']
+
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+
+    # Optional: Confirm role isn't admin before deleting
+    c.execute("SELECT role FROM users WHERE id = ?", (user_id,))
+    role_row = c.fetchone()
+    if role_row and role_row[0] != 'admin':
+        c.execute("DELETE FROM users WHERE id = ?", (user_id,))
+        conn.commit()
+
+    conn.close()
+    return redirect(url_for('manage_users'))
 
 
 
@@ -611,10 +668,191 @@ def serve_pdf(filename):
     return send_from_directory(uploads, filename, mimetype='application/pdf', as_attachment=False)
 
 
+@app.context_processor
+def inject_user_role():
+    return dict(role=session.get('role'))
 
 
+@app.route('/admin/manage_videos')
+@login_required
+def manage_videos_list():
+    if session.get('role') != 'admin':
+        return redirect(url_for('dashboard'))
+    
+    conn = get_db_connection()
+    courses = conn.execute('SELECT id, name, code FROM courses').fetchall()
+    conn.close()
+    return render_template('manage_videos_list.html', courses=courses)
 
 
+@app.route('/admin/course/<int:course_id>/videos', methods=['GET', 'POST'])
+@login_required
+def manage_videos(course_id):
+    if session.get('role') != 'admin':
+        return redirect(url_for('dashboard'))
+    
+    conn = get_db_connection()
+    course = conn.execute('SELECT * FROM courses WHERE id = ?', (course_id,)).fetchone()
+    if not course:
+        conn.close()
+        return "Course not found", 404
+    
+    if request.method == 'POST':
+        title = request.form['title'].strip()
+        embed_code = request.form['embed_code'].strip()  # full iframe embed code
+        
+        if not title:
+            flash("Title is required.")
+        elif not embed_code:
+            flash("Embed code is required.")
+        else:
+            conn.execute(
+                'INSERT INTO videos (course_id, title, embed_code) VALUES (?, ?, ?)',
+                (course_id, title, embed_code)
+            )
+            conn.commit()
+            conn.close()
+            flash("Video added successfully.")
+            return redirect(url_for('manage_videos', course_id=course_id))
+    
+    videos = conn.execute('SELECT * FROM videos WHERE course_id = ?', (course_id,)).fetchall()
+    conn.close()
+    return render_template('manage_videos.html', course=course, videos=videos)
+
+
+@app.route('/admin/video/<int:video_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_video(video_id):
+    if session.get('role') != 'admin':
+        return redirect(url_for('dashboard'))
+    
+    conn = get_db_connection()
+    video = conn.execute('SELECT * FROM videos WHERE id = ?', (video_id,)).fetchone()
+    
+    if not video:
+        conn.close()
+        return "Video not found", 404
+    
+    if request.method == 'POST':
+        title = request.form['title'].strip()
+        embed_code = request.form['embed_code'].strip()
+        
+        if not title:
+            flash("Title is required.")
+        elif not embed_code:
+            flash("Embed code is required.")
+        else:
+            conn.execute(
+                'UPDATE videos SET title = ?, embed_code = ? WHERE id = ?',
+                (title, embed_code, video_id)
+            )
+            conn.commit()
+            conn.close()
+            flash("Video updated successfully.")
+            return redirect(url_for('manage_videos', course_id=video['course_id']))
+    
+    conn.close()
+    return render_template('edit_video.html', video=video)
+
+
+@app.route('/admin/video/<int:video_id>/delete', methods=['POST'])
+@login_required
+def delete_video(video_id):
+    if session.get('role') != 'admin':
+        return redirect(url_for('dashboard'))
+    
+    conn = get_db_connection()
+    video = conn.execute('SELECT * FROM videos WHERE id = ?', (video_id,)).fetchone()
+    
+    if video:
+        conn.execute('DELETE FROM videos WHERE id = ?', (video_id,))
+        conn.commit()
+        flash("Video deleted.")
+        course_id = video['course_id']
+    else:
+        course_id = None
+    
+    conn.close()
+    if course_id:
+        return redirect(url_for('manage_videos', course_id=course_id))
+    else:
+        return redirect(url_for('manage_videos_list'))
+
+
+@app.route('/videos')
+@login_required
+def student_videos():
+    if session.get('role') != 'student':
+        return redirect(url_for('dashboard'))
+    
+    conn = get_db_connection()
+    student_id = session['user_id']
+    
+    courses = conn.execute('''
+        SELECT c.id, c.name, c.code FROM courses c
+        JOIN enrollments e ON e.course_id = c.id
+        WHERE e.student_id = ?
+    ''', (student_id,)).fetchall()
+    
+    course_videos = {}
+    for course in courses:
+        videos = conn.execute('SELECT * FROM videos WHERE course_id = ?', (course['id'],)).fetchall()
+        course_videos[course['id']] = videos
+    
+    conn.close()
+    return render_template('student_videos.html', courses=courses, course_videos=course_videos)
+
+
+@app.route('/videos/watch/<int:video_id>')
+@login_required
+def watch_video(video_id):
+    conn = get_db_connection()
+    video = conn.execute('SELECT * FROM videos WHERE id = ?', (video_id,)).fetchone()
+    
+    if not video:
+        conn.close()
+        return "Video not found", 404
+    
+    user_role = session.get('role')
+    user_id = session.get('user_id')
+    
+    # If student, check enrollment for the video's course
+    if user_role == 'student':
+        enrollment = conn.execute(
+            'SELECT * FROM enrollments WHERE student_id = ? AND course_id = ?',
+            (user_id, video['course_id'])
+        ).fetchone()
+        if not enrollment:
+            conn.close()
+            flash("You are not authorized to view this video.")
+            return redirect(url_for('student_videos'))
+    
+    conn.close()
+    # Pass the embed code directly
+    return render_template('watch_video.html', video=video)
+
+@app.route('/admin/video/<int:video_id>/delete', methods=['POST'])
+@login_required
+def delete_video_post(video_id):
+    if session.get('role') != 'admin':
+        return redirect(url_for('dashboard'))
+
+    conn = get_db_connection()
+    video = conn.execute('SELECT * FROM videos WHERE id = ?', (video_id,)).fetchone()
+
+    if video:
+        conn.execute('DELETE FROM videos WHERE id = ?', (video_id,))
+        conn.commit()
+        flash("Video deleted.")
+        course_id = video['course_id']
+    else:
+        course_id = None
+
+    conn.close()
+    if course_id:
+        return redirect(url_for('manage_videos', course_id=course_id))
+    else:
+        return redirect(url_for('manage_videos_list'))
 
 
 

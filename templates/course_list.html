@@ -8,11 +8,11 @@
       {% for course in courses %}
         <div class="course-card">
           <h3>{{ course.code }}</h3>
-          <p>{{ course.name }}</p>
+          <p class="title" align="left">{{ course.name }}</p>
           {% if course.syllabus_pdf %}
-            <a href="{{ url_for('static', filename='uploads/' ~ course.syllabus_pdf) }}" target="_blank" class="btn btn-secondary">View Syllabus</a>
+            <a href="{{ url_for('static', filename='uploads/' ~ course.syllabus_pdf) }}" target="_blank" class="btn btn-secondary">View Routine</a>
           {% else %}
-            <p><em>No syllabus uploaded</em></p>
+            <p class="no-syllabus"><em>No syllabus uploaded</em></p>
           {% endif %}
         </div>
       {% endfor %}
