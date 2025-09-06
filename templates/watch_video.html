@@ -7,3 +7,39 @@
   {{ video.embed_code | safe }}
 </div>
 {% endblock %}
+{% extends "dashboard_base.html" %}
+
+{% block content %}
+<style>
+  .responsive-video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+    margin: 30px auto;
+  }
+
+  .responsive-video-container iframe,
+  .responsive-video-container object,
+  .responsive-video-container embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  h2 {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-top: 20px;
+  }
+</style>
+
+<h2>{{ video.title }}</h2>
+
+<div class="responsive-video-container">
+  {{ video.embed_code | safe }}
+</div>
+{% endblock %}
