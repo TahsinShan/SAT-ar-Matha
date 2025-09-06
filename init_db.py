@@ -140,12 +140,9 @@ c.execute('''
 
 # Insert Default Admins if not exists
 admin_users = [
-    ('Admin One', 'admin', None, None, None, None, '01700000001', generate_password_hash('abcd1234')),
-    ('Admin Two', 'admin', None, None, None, None, '01700000002', generate_password_hash('abcd1234')),
-    ('Admin Three', 'admin', None, None, None, None, '01700000003', generate_password_hash('abcd1234')),
-    ('Admin Four', 'admin', None, None, None, None, '01700000004', generate_password_hash('abcd1234')),
-    ('Admin Five', 'admin', None, None, None, None, '01700000005', generate_password_hash('abcd1234')),
-    ('Admin Six', 'admin', None, None, None, None, '01700000006', generate_password_hash('abcd1234'))
+    ('Mayeesha Farzana Khan', 'admin', None, None, None, None, '01300885500', generate_password_hash('huh_satfaltu')),
+    ('Sukkhokon Ahmad', 'admin', None, None, None, None, '01700885500', generate_password_hash('huh_1500@me')),
+    ('Tahsin Hasan', 'admin', None, None, None, None, '01816037877', generate_password_hash('amikisuiparina'))
 ]
 
 existing_admins = c.execute("SELECT COUNT(*) FROM users WHERE role = 'admin'").fetchone()[0]
