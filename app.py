@@ -137,19 +137,41 @@ def dashboard():
     user = conn.execute('SELECT * FROM users WHERE id = ?', (session['user_id'],)).fetchone()
 
     if user['role'] == 'student':
+        # Fetch latest updates for students
+        updates = conn.execute(
+            'SELECT title, message, created_at FROM updates ORDER BY created_at DESC LIMIT 5'
+        ).fetchall()
         conn.close()
-        return render_template('student_dashboard.html', user=user, role=user['role'])
+
+        return render_template(
+            'student_dashboard.html',
+            user=user,
+            role=user['role'],
+            updates=updates
+        )
 
     elif user['role'] == 'admin':
-        # Fetch course list for dropdown
-        courses = conn.execute('SELECT id, name, code FROM courses').fetchall()
-        students = conn.execute('SELECT * FROM users WHERE role = "student"').fetchall()
+        # Fetch counts
+        total_courses = conn.execute('SELECT COUNT(*) FROM courses').fetchone()[0]
+        total_students = conn.execute('SELECT COUNT(*) FROM users WHERE role = "student"').fetchone()[0]
         conn.close()
-        return render_template('admin_dashboard.html', user=user, role=user['role'], courses=courses, students=students)
+
+        stats = {
+            "courses": total_courses,
+            "students": total_students
+        }
+
+        return render_template(
+            'admin_dashboard.html',
+            user=user,
+            role=user['role'],
+            stats=stats
+        )
 
     else:
         conn.close()
         return "Invalid role!"
+
 
 
 # Manage Courses (Add & List) for Admin

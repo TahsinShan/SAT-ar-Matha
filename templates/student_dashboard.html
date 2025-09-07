@@ -1,5 +1,126 @@
 {% extends "dashboard_base.html" %}
+{% block dashboard_type %}student-dashboard{% endblock %}
 {% block content %}
-<h2>Welcome, {{ user.name }} (Student)</h2>
-<p>Check your class routine, courses and resouces here.</p>
+
+<style>
+  body.student-dashboard main {
+    background: linear-gradient(to right, #ecfdf5, #f0fdfa);
+    color: #1f2937;
+  }
+
+  h2 {
+    color: #030030;
+    margin-bottom: 0.5rem;
+  }
+
+  .text-muted {
+    color: #64748b !important;
+  }
+
+  .card {
+    border: none;
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  .card-header {
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+
+  .btn {
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .btn:hover {
+    transform: scale(1.05);
+  }
+
+  .btn-outline-primary:hover {
+    background-color: #3b82f6;
+    color: #fff;
+  }
+
+  .btn-outline-dark:hover {
+    background-color: #374151;
+    color: #fff;
+  }
+
+  .btn-outline-danger:hover {
+    background-color: #ef4444;
+    color: #fff;
+  }
+
+  .btn-outline-warning:hover {
+    background-color: #f59e0b;
+    color: #fff;
+  }
+
+  .list-group-item {
+    padding: 1rem;
+    border: none;
+    border-bottom: 1px solid #e2e8f0;
+    transition: background 0.2s ease;
+  }
+
+  .list-group-item:hover {
+    background-color: #f8fafc;
+  }
+
+  .latest-updates-header {
+  background-color: #0c0a35; /* Indigo-600 */
+  color: #ffffff;
+}
+
+
+.shortcuts-header {
+  background-color: #5910b9; /* Emerald-500 */
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+</style>
+
+<div class="container-fluid mt-4">
+  <h2>Welcome, {{ user.name }} (Student)</h2>
+  <p class="text-muted">Check your updates and quick actions here.</p>
+
+  <!-- Shortcuts -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header shortcuts-header text-white">Quick Shortcuts</div>
+    <div class="card-body">
+      <a href="/courses" class="btn btn-outline-primary m-1">📘 View Courses</a>
+      <a href="/resources" class="btn btn-outline-dark m-1">📂 Resources</a>
+      <a href="/videos" class="btn btn-outline-danger m-1">🎥 Course Videos</a>
+      <a href="/events" class="btn btn-outline-warning m-1">📅 Events</a>
+    </div>
+  </div>
+
+  <!-- Updates -->
+  <div class="card shadow-sm">
+    <div class="card-header latest-updates-header text-white">Latest Updates</div>
+    <div class="card-body">
+      {% if updates %}
+        <ul class="list-group">
+          {% for u in updates %}
+            <li class="list-group-item">
+              <strong>{{ u['title'] }}</strong><br>
+              <small class="text-muted">{{ u['created_at'] }}</small><br>
+              {{ u['message'] }}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-muted">No updates available.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
 {% endblock %}

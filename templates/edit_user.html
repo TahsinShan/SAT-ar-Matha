@@ -1,25 +1,96 @@
 {% extends 'dashboard_base.html' %}
 
 {% block content %}
-<h2>Edit User</h2>
+<style>
+  .edit-user-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    color: #1f2937;
+  }
 
-<form method="POST">
+  .edit-user-container h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+  }
+
+  form label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  form input[type="text"] {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background-color: #f9fafb;
+    transition: border-color 0.2s ease-in-out;
+  }
+
+  form input[type="text"]:focus {
+    border-color: #6366f1;
+    outline: none;
+    background-color: #ffffff;
+  }
+
+  form button {
+    background-color: #3a3dbf;
+    color: #ffffff;
+    padding: 0.6rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    margin-right: 1rem;
+  }
+
+  form button:hover {
+    background-color: #1f1b65;
+  }
+
+  form a {
+    color: #ef4444;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+  }
+
+  form a:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<div class="edit-user-container">
+  <h2>Edit User</h2>
+
+  <form method="POST">
     <label>Name:</label>
-    <input type="text" name="name" value="{{ user.name }}" required><br>
+    <input type="text" name="name" value="{{ user.name }}" required>
 
     <label>Phone:</label>
-    <input type="text" name="phone" value="{{ user.phone }}"><br>
+    <input type="text" name="phone" value="{{ user.phone }}">
 
     <label>ID Number:</label>
-    <input type="text" name="id_num" value="{{ user.id_num }}"><br>
+    <input type="text" name="id_num" value="{{ user.id_num }}">
 
     <label>Roll:</label>
-    <input type="text" name="roll" value="{{ user.roll }}"><br>
+    <input type="text" name="roll" value="{{ user.roll }}">
 
     <label>Reg No:</label>
-    <input type="text" name="reg_no" value="{{ user.reg_no }}"><br>
+    <input type="text" name="reg_no" value="{{ user.reg_no }}">
 
-    <button type="submit">Save Changes</button>
+    <button type="submit"> Save Changes</button>
     <a href="{{ url_for('manage_users') }}">Cancel</a>
-</form>
+  </form>
+</div>
 {% endblock %}

@@ -1,10 +1,113 @@
 {% extends "dashboard_base.html" %}
+{% block dashboard_type %}admin-dashboard{% endblock %}
 {% block content %}
-<h2>Welcome, {{ user.name }} (Admin)</h2>
-<p>Manage users, events, and platform activities from here.</p>
 
+<style>
+  body.admin-dashboard main {
+    background: linear-gradient(to right, #eef2ff, #f3f4f6);
+    color: #1e293b;
+  }
 
+  h2 {
+    color: #1e3a8a;
+    margin-bottom: 0.5rem;
+  }
 
+  .text-muted {
+    color: #64748b !important;
+  }
 
+  .card {
+    border: none;
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
 
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  .card-header {
+    background-color: #4338ca;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+
+  .display-6 {
+    font-size: 2.75rem;
+    color: #0f172a;
+  }
+
+  .btn {
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .btn:hover {
+    transform: scale(1.05);
+  }
+
+  .btn-outline-primary:hover {
+    background-color: #4338ca;
+    color: #fff;
+  }
+
+  .btn-outline-success:hover {
+    background-color: #10b981;
+    color: #fff;
+  }
+
+  .btn-outline-dark:hover {
+    background-color: #1f2937;
+    color: #fff;
+  }
+
+  .btn-outline-warning:hover {
+    background-color: #f59e0b;
+    color: #fff;
+  }
+</style>
+
+<div class="container-fluid mt-4">
+  <h2>Welcome, {{ user.name }} (Admin)</h2>
+  <p class="text-muted">Manage courses, students, and platform activities.</p>
+
+  <!-- Stats -->
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <div class="card text-center shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Total Students</h5>
+          <p class="display-6">{{ stats.students }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card text-center shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Total Courses</h5>
+          <p class="display-6">{{ stats.courses }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shortcuts -->
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <div class="card shadow-sm">
+        <div class="card-header">Quick Shortcuts</div>
+        <div class="card-body">
+          <a href="/add_student" class="btn btn-outline-primary m-1">➕ Add Student</a>
+          <a href="/add_course" class="btn btn-outline-success m-1">➕ Add Course</a>
+          <a href="/manage_resources" class="btn btn-outline-dark m-1">📂 Manage Resources</a>
+          <a href="/add_event" class="btn btn-outline-warning m-1">📅 Add Event</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
