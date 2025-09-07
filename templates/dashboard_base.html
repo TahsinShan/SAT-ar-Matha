@@ -23,12 +23,15 @@
     font-family: 'Poppins', sans-serif;
   }
 
-  body.dashboard-body {
-    display: flex;
-    min-height: 100vh;
-    background-color: #f5f7fa;
-    color: #333;
-  }
+ body.dashboard-body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f5f7fa;
+  color: #333;
+}
+
+
 
   /* Sidebar */
 
@@ -185,6 +188,17 @@
     pointer-events: auto;
   }
 
+
+  .page-footer {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #777;
+  padding: 1rem 0;
+  margin-top: auto;
+  background-color: #f5f7fa;
+  margin-left: 240px;
+}
+
   /* Mobile styles */
 
   @media (max-width: 768px) {
@@ -265,8 +279,13 @@
     {% block content %}
     <!--  content goes here -->
     {% endblock %}
+
+    
   </main>
 
+<footer class="page-footer">
+  © 2025 Built by <a href="https://github.com/TahsinShan" target="_blank" style="text-decoration: none; color: inherit;"><strong>Tahsin_Shan</strong></a>
+</footer>
   <!-- ===== Sidebar Backdrop for mobile ===== -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
