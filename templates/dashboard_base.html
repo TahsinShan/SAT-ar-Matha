@@ -229,12 +229,13 @@
     <a href="/dashboard" class="{% if request.path == '/dashboard' %}active{% endif %}">Dashboard</a>
     <a href="/courses" class="{% if request.path.startswith('/courses') %}active{% endif %}">Courses</a>
     <a href="/updates" class="{% if request.path.startswith('/updates') %}active{% endif %}">Updates</a>
-    <a href="/events" class="{% if request.path.startswith('/events') %}active{% endif %}">Events</a>
-    
-    {% if role == 'student' %}
+     {% if role == 'student' %}
     <a href="/resources" class="{% if request.path.startswith('/resources') %}active{% endif %}">Resources</a>
     <a href="/videos" class="{% if request.path.startswith('/videos') %}active{% endif %}">Videos</a>  <!-- Added Videos -->
     {% endif %}
+    <a href="/events" class="{% if request.path.startswith('/events') %}active{% endif %}">Events</a>
+    
+   
 
 
     {% if role == 'admin' %}

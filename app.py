@@ -887,12 +887,16 @@ def logout():
     session.clear()
     return redirect(url_for('login'))
 
-import os
+import os # Replace with your actual app import if needed
 
 if __name__ == '__main__':
-    print("Registered routes:")
-    for rule in app.url_map.iter_rules():
-        print(f"Endpoint: {rule.endpoint} -> URL: {rule}")
-
     port = int(os.environ.get('PORT', 5000))  # Use Render's PORT or default to 5000
-    app.run(host='0.0.0.0', port=port, debug=(port == 5000))
+    debug_mode = port == 5000  # Assume local dev if using default port
+
+    if debug_mode:
+        print("Running in development mode. Registered routes:")
+        for rule in app.url_map.iter_rules():
+            print(f"Endpoint: {rule.endpoint} -> URL: {rule}")
+
+    app.run(host='0.0.0.0', port=port, debug=debug_mode)
+
